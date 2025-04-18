@@ -1,4 +1,4 @@
-module github.com/tritondatacenter/packer-plugin-bhyve
+module github.com/nshalman/packer-plugin-bhyve
 
 go 1.23
 

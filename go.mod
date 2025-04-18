@@ -1,6 +1,8 @@
 module github.com/tritondatacenter/packer-plugin-bhyve
 
-go 1.19
+go 1.23
+
+toolchain go1.24.1
 
 require (
 	github.com/hashicorp/hcl/v2 v2.16.2
@@ -23,6 +25,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.114 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
+	github.com/cenkalti/backoff/v5 v5.0.2 // indirect
 	github.com/dylanmei/iso8601 v0.1.0 // indirect
 	github.com/fatih/color v1.12.0 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect

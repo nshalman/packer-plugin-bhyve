@@ -11,6 +11,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/cenkalti/backoff/v5"
 	"github.com/hashicorp/packer-plugin-sdk/bootcommand"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	"github.com/hashicorp/packer-plugin-sdk/packer"
@@ -87,7 +88,16 @@ func typeBootCommands(ctx context.Context, state multistep.StateBag, bootSteps [
 	// Connect to VNC
 	ui.Say(fmt.Sprintf("Connecting to VM via VNC (%s:%d)", vncIP, vncPort))
 
-	nc, err := net.Dial("tcp", fmt.Sprintf("%s:%d", vncIP, vncPort))
+	dialVnc := func() (net.Conn, error) {
+		nc, err := net.Dial("tcp", fmt.Sprintf("%s:%d", vncIP, vncPort))
+		if err != nil {
+			log.Println("VNC not ready yet... retrying")
+			return nil, err
+		}
+		return nc, nil
+	}
+	nc, err := backoff.Retry(ctx, dialVnc, backoff.WithBackOff(backoff.NewExponentialBackOff()))
+
 	if err != nil {
 		err := fmt.Errorf("Error connecting to VNC: %s", err)
 		state.Put("error", err)
